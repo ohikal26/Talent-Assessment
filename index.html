@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Talent Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F3; --paper-deep:#F3EEE3; --ink:#1A1A1A; --ink-soft:#332E27;
+  --stone:#6B6B6B; --stone-light:#B8B5AE; --rule:#D9D4CB; --rule-ink:#C3BCAE;
+  --olive:#7A8450; --olive-deep:#5F6A3D; --olive-tint:#EDEFE3;
+  --ochre:#C49A3D; --ochre-deep:#9C7826; --ochre-tint:#F4ECD6;
+  --terra:#A05A3C; --terra-deep:#7E4327; --terra-tint:#EFDDD2;
+  --slate:#6B6B6B; --slate-tint:#ECEAE4;
+  --serif:'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --text:'Spectral', Georgia, 'Times New Roman', serif;
+  --sans:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--paper); color:var(--ink); font-family:var(--text); font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased; position:relative; }
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.045'/></svg>");
+}
+.wrap{ position:relative; z-index:1; max-width:940px; margin:0 auto; padding:0 30px 120px 30px; }
+
+/* masthead */
+.masthead{ padding:52px 0 30px 0; text-align:center; }
+.crest{ width:120px; height:120px; margin:0 auto 22px auto; display:block; }
+.rule-pair{ display:flex; align-items:center; gap:14px; justify-content:center; margin:0 auto; max-width:560px; }
+.rule-pair .ln{ flex:1; height:0; border-top:1px solid var(--rule-ink); position:relative; }
+.rule-pair .ln::after{ content:""; position:absolute; left:0; right:0; top:3px; border-top:1px solid var(--rule); }
+.rule-pair .dia{ width:7px; height:7px; background:var(--olive-deep); transform:rotate(45deg); flex:none; }
+.kicker{ font-family:var(--sans); font-size:11.5px; font-weight:700; letter-spacing:.32em; text-transform:uppercase; color:var(--olive-deep); margin:18px 0 12px 0; }
+h1.title{ font-family:var(--serif); font-weight:400; font-size:62px; line-height:1.0; letter-spacing:-.012em; }
+h1.title em{ font-style:italic; color:var(--olive-deep); }
+.subscript{ font-family:var(--sans); font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--stone); margin-top:16px; }
+.lead-wrap{ max-width:670px; margin:28px auto 0 auto; }
+.lead{ font-size:18px; color:var(--ink-soft); line-height:1.62; text-align:center; }
+.lead + .lead{ margin-top:12px; font-size:15.5px; color:var(--stone); }
+.lead em{ font-style:italic; }
+.lead .lock{ font-family:var(--sans); font-size:12.5px; letter-spacing:.03em; }
+
+/* section heading */
+.sec-head{ font-family:var(--sans); font-size:11.5px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--stone); margin:0 0 8px 0; display:flex; align-items:center; gap:12px; }
+.sec-head::after{ content:""; flex:1; height:0; border-top:1px solid var(--rule); }
+.sec-note{ font-family:var(--sans); font-size:12.5px; color:var(--stone); margin-bottom:16px; }
+
+/* setup */
+.setup{ margin-top:42px; }
+.cv-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.cv-grid input{ font-family:var(--text); font-size:15.5px; padding:12px 14px; border:1px solid var(--rule); border-radius:4px; background:#FFFDF8; color:var(--ink); width:100%; transition:border-color .15s, box-shadow .15s; }
+.cv-grid input::placeholder{ color:var(--stone-light); font-style:italic; }
+.cv-grid input:focus{ outline:none; border-color:var(--olive); box-shadow:0 0 0 3px var(--olive-tint); }
+
+.team-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.slot{ display:flex; flex-direction:column; align-items:center; }
+.slot label{ font-family:var(--sans); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--stone-light); margin-bottom:7px; }
+.slot input{ width:100%; text-align:center; font-family:var(--serif); font-size:24px; color:var(--ink); background:#FFFDF8; border:1px solid var(--rule); border-radius:4px; padding:14px 4px; text-transform:uppercase; transition:border-color .15s, box-shadow .15s; }
+.slot input::placeholder{ color:var(--stone-light); font-family:var(--text); font-size:15px; text-transform:none; }
+.slot input:focus{ outline:none; border-color:var(--olive); box-shadow:0 0 0 3px var(--olive-tint); }
+.setup-hint{ font-family:var(--sans); font-size:12.5px; color:var(--stone); margin-top:12px; }
+
+/* assessment */
+.assess{ margin-top:44px; }
+.pcard{ background:#FFFDF8; border:1px solid var(--rule); border-radius:5px; margin-top:16px; overflow:hidden; box-shadow:0 1px 2px rgba(60,50,30,.04); }
+.pcard-head{ display:flex; align-items:center; gap:16px; padding:16px 22px; border-bottom:1px solid var(--rule); background:var(--paper); }
+.badge{ width:52px; height:52px; flex:none; border-radius:50%; background:var(--olive-deep); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:20px; letter-spacing:.02em; }
+.who-wrap{ flex:1; min-width:0; }
+.pcard-head .who{ font-family:var(--sans); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--stone); }
+.pcard-head .placed-name{ font-family:var(--serif); font-size:21px; line-height:1.1; margin-top:2px; }
+.live{ font-family:var(--sans); font-size:12px; color:var(--stone); text-align:right; max-width:236px; line-height:1.45; }
+.live b{ font-weight:700; }
+.live-dot{ display:inline-block; width:9px; height:9px; border-radius:50%; vertical-align:middle; margin-right:5px; }
+.live-pending{ font-style:italic; color:var(--stone-light); }
+
+.dim{ padding:16px 22px; }
+.dim-row{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+.dim-label{ flex:1; min-width:200px; }
+.dim-label .t{ font-size:15.5px; font-weight:500; }
+.dim-label .a{ font-family:var(--sans); font-size:11.5px; color:var(--stone-light); margin-top:3px; letter-spacing:.01em; }
+
+.values-group{ background:var(--olive-tint); border-top:1px solid var(--rule); padding:4px 22px 14px 22px; }
+.vg-head{ display:flex; justify-content:space-between; align-items:baseline; padding:14px 0 2px 0; font-family:var(--sans); font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--olive-deep); }
+.vg-avg{ font-weight:700; letter-spacing:.02em; text-transform:none; font-size:11.5px; color:var(--stone); }
+.vg-anchor{ font-family:var(--sans); font-size:11px; color:var(--stone-light); margin-bottom:4px; }
+.vrow{ padding:10px 0; border-bottom:1px solid rgba(95,106,61,.14); }
+.vrow:last-child{ border-bottom:none; }
+.vrow .dim-label .t{ font-size:14.5px; font-weight:500; }
+.vg-empty{ font-family:var(--text); font-style:italic; color:var(--stone); font-size:14.5px; padding:8px 0 10px 0; }
+
+.seg{ display:flex; gap:4px; flex:none; flex-wrap:wrap; justify-content:flex-end; max-width:392px; }
+.seg button{ font-family:var(--sans); font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; width:33px; height:36px; border:1px solid var(--rule); background:#FFF; color:var(--stone); border-radius:2px; cursor:pointer; transition:transform .08s, background .1s, color .1s, border-color .1s; line-height:1; }
+.seg button:hover{ border-color:var(--stone-light); color:var(--ink); transform:translateY(-1px); }
+.seg button.sel{ color:#FFF; border-color:transparent; box-shadow:0 1px 3px rgba(60,40,20,.25); }
+
+.empty-team{ font-family:var(--text); font-style:italic; color:var(--stone); margin-top:18px; font-size:15.5px; }
+
+/* actions */
+.actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:32px; }
+.btn{ font-family:var(--sans); font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:14px 26px; border-radius:2px; cursor:pointer; transition:all .15s; border:1px solid var(--olive-deep); }
+.btn.primary{ background:var(--olive-deep); color:var(--paper); }
+.btn.primary:hover{ background:var(--olive); border-color:var(--olive); }
+.btn.ghost{ background:transparent; color:var(--olive-deep); }
+.btn.ghost:hover{ background:var(--olive-tint); }
+
+/* results */
+.results{ margin-top:56px; scroll-margin-top:20px; }
+.results-masthead{ text-align:center; margin-bottom:30px; }
+.results-head{ font-family:var(--serif); font-size:38px; line-height:1.05; }
+.results-head em{ font-style:italic; color:var(--olive-deep); }
+.results-sub{ font-family:var(--sans); font-size:13px; letter-spacing:.04em; color:var(--stone); margin-top:8px; }
+
+.matrix-wrap{ background:#FFFDF8; border:1px solid var(--rule); border-radius:6px; padding:24px; box-shadow:0 1px 2px rgba(60,50,30,.04); }
+#matrix{ width:100%; height:auto; display:block; max-width:560px; margin:0 auto; }
+#matrix text{ font-family:var(--sans); }
+.mx-q{ font-weight:700; letter-spacing:.07em; font-size:11px; }
+.mx-axis{ font-size:11px; letter-spacing:.14em; fill:var(--stone); font-weight:600; }
+.mx-end{ font-size:9px; letter-spacing:.12em; fill:var(--stone-light); font-weight:600; }
+.mx-init{ font-weight:700; font-size:12.5px; fill:#fff; }
+
+.quads{ margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:16px; grid-template-areas:"b a" "c t"; }
+.qa{ grid-area:a; } .qb{ grid-area:b; } .qc{ grid-area:c; } .qt{ grid-area:t; }
+.quad{ border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:#FFFDF8; }
+.quad-band{ padding:11px 18px; display:flex; align-items:baseline; justify-content:space-between; color:#fff; }
+.quad-band .nm{ font-family:var(--serif); font-size:19px; }
+.quad-band .ct{ font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.05em; opacity:.85; }
+.quad-inner{ padding:15px 18px 18px 18px; }
+.quad-sub{ font-family:var(--sans); font-size:10.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--stone-light); margin-bottom:10px; }
+.chips{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:13px; min-height:30px; }
+.chip{ font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.02em; color:#fff; padding:6px 11px; border-radius:3px; }
+.chip-none{ font-family:var(--text); font-style:italic; color:var(--stone-light); font-size:14px; }
+.quad-note{ font-size:14px; line-height:1.55; color:var(--ink-soft); }
+.tier-rule{ height:0; border-top:1px solid var(--rule); margin:18px 0 15px 0; }
+.tier-head{ display:flex; align-items:baseline; justify-content:space-between; font-family:var(--serif); font-size:18px; color:var(--olive); margin-bottom:9px; }
+.tier-head .ct{ font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.05em; color:var(--stone-light); }
+
+details.how{ margin-top:30px; border-top:1px solid var(--rule); padding-top:20px; }
+details.how summary{ cursor:pointer; font-family:var(--sans); font-size:12.5px; font-weight:600; letter-spacing:.04em; color:var(--olive-deep); list-style:none; }
+details.how summary::-webkit-details-marker{ display:none; }
+details.how summary::before{ content:"+ "; }
+details.how[open] summary::before{ content:"\2013 "; }
+details.how .body{ font-size:14.5px; color:var(--stone); line-height:1.62; margin-top:14px; }
+details.how .body b{ color:var(--ink); }
+details.how .body p + p{ margin-top:10px; }
+
+.foot{ margin-top:50px; text-align:center; }
+.foot .mark{ width:40px; height:40px; margin:0 auto 14px auto; display:block; opacity:.55; }
+.foot .txt{ font-family:var(--sans); font-size:11.5px; color:var(--stone-light); line-height:1.7; letter-spacing:.02em; }
+.hidden{ display:none !important; }
+
+@media (max-width:720px){
+  .wrap{ padding:0 18px 90px 18px; }
+  h1.title{ font-size:44px; }
+  .cv-grid{ grid-template-columns:1fr 1fr; }
+  .team-grid{ grid-template-columns:repeat(3,1fr); }
+  .pcard-head{ flex-wrap:wrap; }
+  .live{ text-align:left; max-width:none; width:100%; }
+  .dim-row{ flex-direction:column; align-items:stretch; gap:11px; }
+  .seg{ max-width:none; justify-content:space-between; }
+  .seg button{ flex:1 0 auto; }
+  .quads{ grid-template-columns:1fr; grid-template-areas:"a" "b" "c" "t"; }
+}
+@media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+@media print{
+  body::before{ display:none; }
+  .setup, .assess, .actions, details.how, .seg{ display:none !important; }
+  body{ background:#fff; }
+  .quad, .matrix-wrap{ break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <svg class="crest" viewBox="0 0 120 120" aria-hidden="true">
+      <rect x="14" y="14" width="44" height="44" fill="#F4ECD6" stroke="#C3BCAE"/>
+      <rect x="62" y="14" width="44" height="44" fill="#EDEFE3" stroke="#C3BCAE"/>
+      <rect x="14" y="62" width="44" height="44" fill="#ECEAE4" stroke="#C3BCAE"/>
+      <rect x="62" y="62" width="44" height="44" fill="#EFDDD2" stroke="#C3BCAE"/>
+      <rect x="84" y="14" width="22" height="22" fill="#7A8450" opacity="0.22" stroke="#5F6A3D" stroke-width="1"/>
+      <circle cx="95" cy="25" r="5.5" fill="#5F6A3D"/>
+    </svg>
+    <div class="rule-pair"><span class="ln"></span><span class="dia"></span><span class="ln"></span></div>
+    <div class="kicker">People &middot; The Right People in the Right Seats</div>
+    <h1 class="title">The Talent <em>Matrix</em></h1>
+    <div class="subscript">Performance &times; Values &middot; Five or Six at a Time</div>
+    <div class="lead-wrap">
+      <p class="lead">Two things tell you whether someone belongs on the team: whether they deliver, and whether they live the values. This plots both, so you can see your team for what it is and decide who to grow, who to coach, and who to act on.</p>
+      <p class="lead"><span class="lock">Name your core values, enter the initials of your five or six direct reports, and score each person on performance and on every value. Nothing here is saved or sent anywhere. It stays in your browser, so you can be honest.</span></p>
+    </div>
+  </header>
+
+  <!-- CORE VALUES -->
+  <section class="setup">
+    <div class="sec-head">Your core values</div>
+    <div class="sec-note">The standard you measure people against. Use the values your company actually runs by. Two or three is enough, up to six.</div>
+    <div class="cv-grid" id="cvGrid"></div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="setup">
+    <div class="sec-head">Your team</div>
+    <div class="team-grid" id="teamGrid"></div>
+    <div class="setup-hint">Initials only. Two or three letters is plenty. Leave a box empty to skip it.</div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="assess">
+    <div class="sec-head">The assessment</div>
+    <div id="assessList"></div>
+    <div class="empty-team" id="emptyTeam">Add a set of initials above and a scoring card will appear here for each person.</div>
+  </section>
+
+  <div class="actions">
+    <button class="btn primary" onclick="document.getElementById('results').scrollIntoView()">See the matrix</button>
+    <button class="btn ghost" onclick="window.print()">Print / save PDF</button>
+    <button class="btn ghost" onclick="resetAll()">Reset</button>
+  </div>
+
+  <!-- RESULTS -->
+  <section class="results" id="results">
+    <div class="results-masthead">
+      <div class="results-head">Where your team <em>lands</em></div>
+      <div class="results-sub" id="resultsSub">Score performance and values for each person to place them.</div>
+    </div>
+
+    <div class="matrix-wrap">
+      <svg id="matrix" viewBox="0 0 480 456" aria-label="Talent matrix"></svg>
+    </div>
+
+    <div class="quads">
+      <div class="quad qa"><div class="quad-band" style="background:var(--olive-deep)"><span class="nm">A Players</span><span class="ct" id="ct-A">0</span></div>
+        <div class="quad-inner"><div class="quad-sub">7.5 and above on both &middot; the inner square</div><div class="chips" id="chips-A"></div>
+          <div class="quad-note">Your core. They clear the bar on performance and on values. Keep them, stretch them, and make sure they know they matter. These are the people who hurt most to lose.</div>
+          <div class="tier-rule"></div>
+          <div class="tier-head"><span>Potential A</span><span class="ct" id="ct-POTENTIAL">0</span></div>
+          <div class="quad-sub">High on both, not yet at 7.5</div><div class="chips" id="chips-POTENTIAL"></div>
+          <div class="quad-note">The closest group to your core. Strong on both, but short of an A on one count or both. Name the gap and help them close it.</div></div></div>
+      <div class="quad qb"><div class="quad-band" style="background:var(--ochre)"><span class="nm">B Players</span><span class="ct" id="ct-B">0</span></div>
+        <div class="quad-inner"><div class="quad-sub">Lives the values &middot; performance to build</div><div class="chips" id="chips-B"></div>
+          <div class="quad-note">The values are there, the performance is not yet. This is the best place to invest. Set clear targets, coach them hard, and give it a real but defined window.</div></div></div>
+      <div class="quad qc"><div class="quad-band" style="background:var(--slate)"><span class="nm">C Players</span><span class="ct" id="ct-C">0</span></div>
+        <div class="quad-inner"><div class="quad-sub">Low on both</div><div class="chips" id="chips-C"></div>
+          <div class="quad-note">Low on both counts. Be honest, be kind, and move them on. Holding on out of guilt helps no one, them included.</div></div></div>
+      <div class="quad qt"><div class="quad-band" style="background:var(--terra)"><span class="nm">Toxic Performers</span><span class="ct" id="ct-TOXIC">0</span></div>
+        <div class="quad-inner"><div class="quad-sub">Strong results &middot; works against the values</div><div class="chips" id="chips-TOXIC"></div>
+          <div class="quad-note">Strong numbers, but they pull against the values. This is the hardest call and the most important one. The results tempt you to look past the behavior while it quietly corrodes the team. Name it directly. If it does not change, let them go.</div></div></div>
+    </div>
+
+    <details class="how">
+      <summary>How this works</summary>
+      <div class="body">
+        <p>You score each person on two things, from <b>1 to 10</b>. The first is performance against their KPIs. The second is values, and that score is the <b>average of how they live each of your core values</b>, weighted equally. Score someone high on most values but low on one, and that one pulls their average down. That is the point: a person does not get to live some values and ignore others.</p>
+        <p>The horizontal axis is performance, the vertical axis is the values average, and the lines cross at the middle of each scale. That gives four quadrants, and the top right holds a smaller square in the corner. <b>A players</b> sit inside it, at 7.5 or higher on both performance and the values average. <b>Potential A</b> players fill the rest of the top right: high on both, but not yet over the bar. <b>B players</b> sit top left, living the values with performance still to build. <b>C players</b> sit bottom left, low on both. <b>Toxic performers</b> sit bottom right, delivering results while working against the values.</p>
+        <p>A person only appears on the matrix once you have scored their performance and every core value, so the average is always complete.</p>
+      </div>
+    </details>
+  </section>
+
+  <div class="foot">
+    <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="3" y="3" width="16" height="16" fill="none" stroke="#9C7826" stroke-width="1.4"/>
+      <rect x="21" y="3" width="16" height="16" fill="none" stroke="#5F6A3D" stroke-width="1.4"/>
+      <rect x="3" y="21" width="16" height="16" fill="none" stroke="#6B6B6B" stroke-width="1.4"/>
+      <rect x="21" y="21" width="16" height="16" fill="none" stroke="#A05A3C" stroke-width="1.4"/>
+      <circle cx="29" cy="11" r="4" fill="#5F6A3D"/>
+    </svg>
+    <div class="txt">The Talent Matrix &middot; performance against values.<br>Built for the Scaling Up Masterclass &middot; Performance Coaching &amp; Consulting</div>
+  </div>
+
+</div>
+
+<script>
+const NV = 6, NP = 6, A_BAR = 7.5;
+const coreValues = Array(NV).fill('');
+const people = Array.from({length:NP}, ()=>({ initials:'', perf:null, values:Array(NV).fill(null) }));
+
+function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+const LEVEL = s => s==null ? '#B8B5AE' : s<3?'#7E4327' : s<5?'#A05A3C' : s<7?'#C49A3D' : s<9?'#7A8450' : '#5F6A3D';
+
+const QUAD = {
+  A:        { name:'A Players',        hex:'#5F6A3D' },
+  POTENTIAL:{ name:'Potential A',      hex:'#7A8450' },
+  B:        { name:'B Players',        hex:'#C49A3D' },
+  C:        { name:'C Players',        hex:'#6B6B6B' },
+  TOXIC:    { name:'Toxic Performers', hex:'#A05A3C' }
+};
+function quadrant(perf, vAvg){
+  const hiP = perf >= 6, hiV = vAvg >= 6;
+  if (hiP && hiV) return (perf >= A_BAR && vAvg >= A_BAR) ? 'A' : 'POTENTIAL';
+  if (!hiP && hiV) return 'B';
+  if (!hiP && !hiV) return 'C';
+  return 'TOXIC';
+}
+
+/* ----- the math: values score = equal-weighted average across entered core values ----- */
+function enteredValues(){ return coreValues.map((v,i)=>({ name:v.trim(), i })).filter(o=>o.name!==''); }
+function valuesAvg(p){
+  const ev = enteredValues();
+  let sum=0, scored=0;
+  ev.forEach(({i})=>{ if (p.values[i]!=null){ sum+=p.values[i]; scored++; } });
+  return { entered:ev.length, scored, avg: scored ? sum/scored : null };
+}
+function isPlaced(p){
+  const va = valuesAvg(p);
+  return p.initials!=='' && p.perf!=null && va.entered>=1 && va.scored===va.entered;
+}
+
+/* ---------- core value inputs (built once) ---------- */
+const cvGrid = document.getElementById('cvGrid');
+for (let i=0;i<NV;i++){
+  const inp=document.createElement('input');
+  inp.id='cv-'+i; inp.maxLength=28; inp.autocomplete='off';
+  inp.placeholder='Core value '+(i+1); inp.setAttribute('aria-label','Core value '+(i+1));
+  inp.addEventListener('input', e=>{ coreValues[i]=e.target.value; renderAssess(); renderResults(); });
+  cvGrid.appendChild(inp);
+}
+
+/* ---------- team initials inputs (built once) ---------- */
+const teamGrid = document.getElementById('teamGrid');
+for (let i=0;i<NP;i++){
+  const slot=document.createElement('div'); slot.className='slot';
+  slot.innerHTML = `<label>${i+1}</label><input id="init-${i}" maxlength="4" placeholder="--" autocomplete="off" aria-label="Initials for person ${i+1}">`;
+  teamGrid.appendChild(slot);
+  slot.querySelector('input').addEventListener('input', e=>{
+    people[i].initials = e.target.value.trim().toUpperCase();
+    renderAssess(); renderResults();
+  });
+}
+
+/* ---------- assessment cards ---------- */
+function segButtons(i, key, cur){
+  let s='';
+  for(let v=1;v<=10;v++){
+    const sel = cur===v;
+    const style = sel ? `style="background:${LEVEL(v)};border-color:transparent;color:#fff"` : '';
+    s += `<button data-v="${v}" ${style} onclick="setScore(${i},'${key}',${v})">${v}</button>`;
+  }
+  return s;
+}
+function renderAssess(){
+  const list = document.getElementById('assessList');
+  const active = people.map((p,i)=>({p,i})).filter(o=>o.p.initials!=='');
+  document.getElementById('emptyTeam').classList.toggle('hidden', active.length>0);
+  const ev = enteredValues();
+  list.innerHTML = active.map(({p,i})=>{
+    let valuesHtml;
+    if (ev.length===0){
+      valuesHtml = `<div class="vg-empty">Add your core values above, then score ${escapeHtml(p.initials)||'this person'} on each one.</div>`;
+    } else {
+      valuesHtml = ev.map(({name,i:vi})=>`<div class="vrow"><div class="dim-row">
+        <div class="dim-label"><div class="t">${escapeHtml(name)}</div></div>
+        <div class="seg" id="seg-${i}-v${vi}">${segButtons(i,'v'+vi,p.values[vi])}</div></div></div>`).join('');
+    }
+    return `<div class="pcard">
+      <div class="pcard-head">
+        <div class="badge">${escapeHtml(p.initials)}</div>
+        <div class="who-wrap"><div class="who">Direct report ${i+1}</div><div class="placed-name">${escapeHtml(p.initials)}</div></div>
+        <div class="live" id="live-${i}"></div>
+      </div>
+      <div class="dim"><div class="dim-row">
+        <div class="dim-label"><div class="t">Performance against KPIs</div><div class="a">1 = consistently misses  ·  10 = consistently exceeds</div></div>
+        <div class="seg" id="seg-${i}-perf">${segButtons(i,'perf',p.perf)}</div></div></div>
+      <div class="values-group">
+        <div class="vg-head"><span>Lives the core values</span><span class="vg-avg" id="vgavg-${i}"></span></div>
+        ${ev.length? '<div class="vg-anchor">1 = works against it  ·  10 = role models it</div>' : ''}
+        ${valuesHtml}
+      </div>
+    </div>`;
+  }).join('');
+  active.forEach(({i})=> updateLive(i));
+}
+function setScore(i, key, v){
+  if (key==='perf') people[i].perf = v;
+  else people[i].values[+key.slice(1)] = v;
+  const seg = document.getElementById(`seg-${i}-${key}`);
+  [...seg.children].forEach(b=>{
+    const on = (+b.dataset.v===v);
+    b.classList.toggle('sel', on);
+    b.style.background = on ? LEVEL(v) : '';
+    b.style.borderColor = on ? 'transparent' : '';
+    b.style.color = on ? '#fff' : '';
+  });
+  updateLive(i);
+  renderResults();
+}
+function updateLive(i){
+  const p = people[i], va = valuesAvg(p);
+  const avgEl = document.getElementById(`vgavg-${i}`);
+  if (avgEl){
+    if (va.entered===0) avgEl.textContent = '';
+    else if (va.avg==null) avgEl.textContent = `0 of ${va.entered} scored`;
+    else avgEl.textContent = `average ${va.avg.toFixed(1)} / 10` + (va.scored<va.entered ? `  (${va.scored} of ${va.entered})` : '');
+  }
+  const live = document.getElementById(`live-${i}`);
+  if (!live) return;
+  if (isPlaced(p)){
+    const q = quadrant(p.perf, va.avg), meta = QUAD[q];
+    live.innerHTML = `<span class="live-dot" style="background:${meta.hex}"></span>Perf ${p.perf} &middot; Values ${va.avg.toFixed(1)} &middot; <b style="color:${meta.hex}">${meta.name}</b>`;
+  } else {
+    live.innerHTML = `<span class="live-pending">Score performance and each value to place ${escapeHtml(p.initials)||'this person'}</span>`;
+  }
+}
+
+/* ---------- matrix geometry ---------- */
+const L=64, T=24, S=380, MID=L+S/2, MIDY=T+S/2, R=L+S, B=T+S, DR=15;
+const px = sc => L + ((sc-1)/9)*S;
+const py = sc => T + S - ((sc-1)/9)*S;
+const AX = px(A_BAR), AY = py(A_BAR), A_LABEL = 20;
+
+function clampToQuad(pt){
+  let x0,x1,y0,y1;
+  if      (pt.q==='A'){         x0=AX;  x1=R;   y0=T+A_LABEL; y1=AY; }
+  else if (pt.q==='POTENTIAL'){ x0=MID; x1=R;   y0=T;         y1=MIDY; }
+  else if (pt.q==='B'){         x0=L;   x1=MID; y0=T;         y1=MIDY; }
+  else if (pt.q==='C'){         x0=L;   x1=MID; y0=MIDY;      y1=B; }
+  else {                        x0=MID; x1=R;   y0=MIDY;      y1=B; }
+  pt.x = Math.max(x0+DR+3, Math.min(x1-DR-3, pt.x));
+  pt.y = Math.max(y0+DR+3, Math.min(y1-DR-3, pt.y));
+  if (pt.q==='POTENTIAL' && pt.x+DR > AX && pt.y-DR < AY){
+    if ((pt.x-(AX-DR)) <= ((AY+DR)-pt.y)) pt.x = AX-DR-1; else pt.y = AY+DR+1;
+    pt.x = Math.max(MID+DR+3, Math.min(R-DR-3, pt.x));
+    pt.y = Math.max(T+DR+3, Math.min(MIDY-DR-3, pt.y));
+  }
+}
+function layout(scored){
+  const pts = scored.map(p=>({ x:px(p.perf), y:py(p.vavg), q:quadrant(p.perf,p.vavg), initials:p.initials }));
+  pts.forEach(clampToQuad);
+  const min = 2*DR+4;
+  for(let it=0; it<90; it++){
+    for(let a=0;a<pts.length;a++) for(let bnd=a+1;bnd<pts.length;bnd++){
+      let dx=pts[bnd].x-pts[a].x, dy=pts[bnd].y-pts[a].y, d=Math.hypot(dx,dy);
+      if(d<min){
+        if(d<0.01){ dx=(a-bnd); dy=(bnd-a)+0.7; d=Math.hypot(dx,dy)||1; }
+        const push=(min-d)/2, ux=dx/d, uy=dy/d;
+        pts[a].x-=ux*push; pts[a].y-=uy*push; clampToQuad(pts[a]);
+        pts[bnd].x+=ux*push; pts[bnd].y+=uy*push; clampToQuad(pts[bnd]);
+      }
+    }
+  }
+  return pts;
+}
+function buildMatrix(scored){
+  let s='';
+  s += `<rect x="${L}" y="${T}" width="${S/2}" height="${S/2}" fill="#F4ECD6" opacity="0.5"/>`;
+  s += `<rect x="${MID}" y="${T}" width="${S/2}" height="${S/2}" fill="#EDEFE3" opacity="0.7"/>`;
+  s += `<rect x="${L}" y="${MIDY}" width="${S/2}" height="${S/2}" fill="#ECEAE4" opacity="0.6"/>`;
+  s += `<rect x="${MID}" y="${MIDY}" width="${S/2}" height="${S/2}" fill="#EFDDD2" opacity="0.5"/>`;
+  s += `<rect x="${L}" y="${T}" width="${S}" height="${S}" fill="none" stroke="#C3BCAE" stroke-width="1.4"/>`;
+  s += `<line x1="${MID}" y1="${T}" x2="${MID}" y2="${B}" stroke="#C3BCAE" stroke-width="1.2" stroke-dasharray="3 4"/>`;
+  s += `<line x1="${L}" y1="${MIDY}" x2="${R}" y2="${MIDY}" stroke="#C3BCAE" stroke-width="1.2" stroke-dasharray="3 4"/>`;
+  s += `<rect x="${AX}" y="${T}" width="${(R-AX).toFixed(1)}" height="${(AY-T).toFixed(1)}" fill="#7A8450" opacity="0.16"/>`;
+  s += `<rect x="${AX}" y="${T}" width="${(R-AX).toFixed(1)}" height="${(AY-T).toFixed(1)}" fill="none" stroke="#5F6A3D" stroke-width="1.4"/>`;
+  s += `<rect x="${(AX+3).toFixed(1)}" y="${T+3}" width="${(R-AX-6).toFixed(1)}" height="${(AY-T-6).toFixed(1)}" fill="none" stroke="#5F6A3D" stroke-width="0.6" opacity="0.45"/>`;
+  s += `<text class="mx-q" x="${(AX+R)/2}" y="${T+15}" text-anchor="middle" fill="#5F6A3D">A PLAYERS</text>`;
+  s += `<text class="mx-q" x="${MID+12}" y="${T+18}" text-anchor="start" fill="#7A8450">POTENTIAL A</text>`;
+  s += `<text class="mx-q" x="${L+10}" y="${T+18}" text-anchor="start" fill="#9C7826">B PLAYERS</text>`;
+  s += `<text class="mx-q" x="${L+10}" y="${B-10}" text-anchor="start" fill="#6B6B6B">C PLAYERS</text>`;
+  s += `<text class="mx-q" x="${R-10}" y="${B-10}" text-anchor="end" fill="#7E4327">TOXIC PERFORMERS</text>`;
+  s += `<text class="mx-axis" x="${L+S/2}" y="${B+34}" text-anchor="middle">PERFORMANCE AGAINST KPIs</text>`;
+  s += `<line x1="${L}" y1="${B+44}" x2="${R}" y2="${B+44}" stroke="#D9D4CB" stroke-width="1"/>`;
+  s += `<path d="M${R} ${B+44} l-7 -3 v6 z" fill="#B8B5AE"/>`;
+  s += `<text class="mx-end" x="${L}" y="${B+47}" text-anchor="start">LOW</text>`;
+  s += `<text class="mx-end" x="${R-14}" y="${B+47}" text-anchor="end">HIGH</text>`;
+  s += `<g transform="translate(22 ${T+S/2}) rotate(-90)"><text class="mx-axis" x="0" y="0" text-anchor="middle">LIVES THE CORE VALUES</text></g>`;
+  s += `<line x1="${L-12}" y1="${B}" x2="${L-12}" y2="${T}" stroke="#D9D4CB" stroke-width="1"/>`;
+  s += `<path d="M${L-12} ${T} l-3 7 h6 z" fill="#B8B5AE"/>`;
+  s += `<g transform="translate(${L-9} ${B}) rotate(-90)"><text class="mx-end" x="0" y="0" text-anchor="start">LOW</text></g>`;
+  s += `<g transform="translate(${L-9} ${T+34}) rotate(-90)"><text class="mx-end" x="0" y="0" text-anchor="end">HIGH</text></g>`;
+  const pts = layout(scored);
+  pts.forEach(pt=>{
+    const hex = QUAD[pt.q].hex;
+    s += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="${DR}" fill="${hex}" stroke="#FBF8F3" stroke-width="2"/>`;
+    s += `<text class="mx-init" x="${pt.x.toFixed(1)}" y="${(pt.y+4.3).toFixed(1)}" text-anchor="middle">${escapeHtml(pt.initials)}</text>`;
+  });
+  document.getElementById('matrix').innerHTML = s;
+}
+
+/* ---------- results ---------- */
+function renderResults(){
+  const scored = people.filter(isPlaced).map(p=>({ initials:p.initials, perf:p.perf, vavg:valuesAvg(p).avg }));
+  const named = people.filter(p=>p.initials!=='');
+  buildMatrix(scored);
+
+  const sub = document.getElementById('resultsSub');
+  if (named.length===0) sub.textContent = 'Add your team above to begin.';
+  else if (enteredValues().length===0) sub.textContent = 'Add your core values above so you can score the values dimension.';
+  else if (scored.length < named.length) sub.textContent = `${scored.length} of ${named.length} placed. Finish scoring the rest to see the full picture.`;
+  else sub.textContent = `All ${scored.length} placed. Here is your team, honestly.`;
+
+  const buckets = {A:[],POTENTIAL:[],B:[],C:[],TOXIC:[]};
+  scored.forEach(p=> buckets[quadrant(p.perf,p.vavg)].push(p));
+  Object.keys(buckets).forEach(q=>{
+    document.getElementById('ct-'+q).textContent = buckets[q].length;
+    const box = document.getElementById('chips-'+q);
+    box.innerHTML = buckets[q].length
+      ? buckets[q].map(p=>`<span class="chip" style="background:${QUAD[q].hex}">${escapeHtml(p.initials)}</span>`).join('')
+      : `<span class="chip-none">No one here yet</span>`;
+  });
+}
+
+function resetAll(){
+  coreValues.fill('');
+  people.forEach(p=>{ p.initials=''; p.perf=null; p.values=Array(NV).fill(null); });
+  for(let i=0;i<NV;i++) document.getElementById('cv-'+i).value='';
+  for(let i=0;i<NP;i++) document.getElementById('init-'+i).value='';
+  renderAssess(); renderResults();
+  window.scrollTo({top:0});
+}
+
+renderAssess();
+renderResults();
+</script>
+</body>
+</html>
